@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 function App() {
    return (
       <div>
-          <h1>Bienvenido al Dashboard De DAWM</h1>
+          <h1>Bienvenido al Dashboard</h1>
           <Grid container spacing={5} justifyContent="center" alignItems="center">
 
             {/* Encabezado */}

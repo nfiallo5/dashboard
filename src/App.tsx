@@ -1,4 +1,5 @@
 import { Grid } from '@mui/material';
+import './App.css';
 
 function App() {
    return (

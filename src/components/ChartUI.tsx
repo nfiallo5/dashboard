@@ -16,17 +16,17 @@ export default function ChartUI(props: ChartUIProps) {
       <>
          <Typography variant="h5" component="div">
             {props.hourly ? 
-               `Gráfico Tiempo (${props.hourly_units?.time || 'Hora'}) vs Temperatura (${props.hourly_units?.temperature_2m || '°C'}) y Velocidad del Viento (${props.hourly_units?.wind_speed_10m || 'km/h'})` : 
+               `Gráfico Temperatura (2m) y Velocidad del Viento (10m) (Últimas 24 horas)` : 
                'Chart arrLabels vs arrValues1 & arrValues2'
             }
          </Typography>
          <LineChart
             height={300}
             series={[
-               { data: props.hourly?.temperature_2m || arrValues1, label: props.hourly ? `Temperatura (${props.hourly_units?.temperature_2m || '°C'})` : 'value1'},
-               { data: props.hourly?.wind_speed_10m || arrValues2, label: props.hourly ? `Velocidad del Viento (${props.hourly_units?.wind_speed_10m || 'km/h'})` : 'value2'},
+               { data: props.hourly?.temperature_2m.slice(-24) || arrValues1, label: props.hourly ? `Temperatura (${props.hourly_units?.temperature_2m || '°C'})` : 'value1'},
+               { data: props.hourly?.wind_speed_10m.slice(-24) || arrValues2, label: props.hourly ? `Velocidad del Viento (${props.hourly_units?.wind_speed_10m || 'km/h'})` : 'value2'},
             ]}
-            xAxis={[{ scaleType: 'point', data: props.hourly?.time || arrLabels }]}
+            xAxis={[{ scaleType: 'point', data: props.hourly?.time.slice(-24).map(t => t.split('T')[1]) || arrLabels }]}
          />
       </>
    );

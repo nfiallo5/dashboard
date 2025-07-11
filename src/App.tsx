@@ -84,7 +84,10 @@ function App() {
 
         {/* Tabla */}
         <Grid size={{ xs: 6, md: 6 }} sx={{ display: { xs: "none", md: "block" } }}>
-          <TableUI />
+          {dataFetcherOutput.loading && <p>Cargando datos...</p>}
+          {dataFetcherOutput.error && <p>Error: {dataFetcherOutput.error}</p>}
+          {dataFetcherOutput.data && 
+          (<TableUI hourly={dataFetcherOutput.data.hourly} hourly_units={dataFetcherOutput.data.hourly_units}/>)}
         </Grid>
 
         {/* Información adicional */}

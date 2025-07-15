@@ -1,9 +1,8 @@
 {
   "name": "dashboard",
-  "private": false,
+  "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://nfiallo5.github.io/dashboard",
   "scripts": {
     "dev": "vite",
     "predeploy": "npm run build",
@@ -20,6 +19,7 @@
     "@mui/x-data-grid": "^8.7.0",
     "install": "^0.13.0",
     "npm": "^11.4.2",
+    "axios": "^1.10.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
@@ -35,6 +35,16 @@
     "globals": "^16.2.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.34.1",
-    "vite": "^7.0.0"
-  }
+    "vite": "^7.0.0",
+    "vite-plugin-pwa": "^1.0.1"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nfiallo5/dashboard.git"
+  },
+  "homepage": "https://nfiallo5.github.io/dashboard/"
 }

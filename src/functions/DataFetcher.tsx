@@ -14,6 +14,8 @@ const cityCoords: Record<string, { latitude: number; longitude: number }> = {
     cuenca:     { latitude: -2.90, longitude: -78.99 },
 };
 
+const CACHE_DURATION_MINUTES = 15;
+
 export default function DataFetcher(city: string) : DataFetcherOutput {
     const [data, setData] = useState<OpenMeteoResponse | null>(null);
     const [loading, setLoading] = useState(true);
@@ -34,6 +36,11 @@ export default function DataFetcher(city: string) : DataFetcherOutput {
                 }
                 const result: OpenMeteoResponse = await response.json();
                 setData(result);
+                const cachedData = {
+                    data: result,
+                    expirationTime: Date.now() + (CACHE_DURATION_MINUTES * 60 * 1000)
+                };
+                localStorage.setItem(city, JSON.stringify(cachedData));
             } catch (err: any) {
                 if (err instanceof Error) {
                     setError(err.message);
@@ -44,7 +51,32 @@ export default function DataFetcher(city: string) : DataFetcherOutput {
                 setLoading(false);
             }
         };
-        fetchData();
+
+        const getData = async () => {
+            const cachedData = localStorage.getItem(city);
+            
+            if (!cachedData) {
+                return await fetchData();
+            }
+
+            try {
+                const { data: cachedResult, expirationTime } = await JSON.parse(cachedData);
+                
+                if (Date.now() >= expirationTime) {
+                    localStorage.removeItem(city);
+                    return await fetchData();
+                }
+
+                setData(cachedResult);
+                setLoading(false);
+                
+            } catch {
+                await fetchData();
+            }
+        };
+
+        getData();
+
     }, [city]);
     return { data, loading, error };
 }

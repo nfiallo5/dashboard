@@ -7,16 +7,23 @@ import IndicatorUI from "./components/IndicatorUI";
 import DataFetcher from "./functions/DataFetcher";
 import TableUI from "./components/TableUI";
 import ChartUI from "./components/ChartUI";
+import ZoneSelectorUI from "./components/ZoneSelectorUI";
 import { useState } from "react";
 
-function App() {
-  const [city, setCity] = useState<string>("guayaquil");
+interface Coords {
+  name: string;
+  lat: number;
+  lng: number;
+  variety: string;
+}
 
-  const dataFetcherOutput = DataFetcher(city);
+function App() {
+  const [coords, setCoords] = useState<Coords | null>(null);
+
+  const dataFetcherOutput = DataFetcher(coords);
 
   return (
     <div>
-      <h1>Bienvenido al dashboard</h1>
       <Grid container spacing={5} justifyContent="center" alignItems="center">
         {/* Encabezado */}
         <Grid size={{ xs: 12, md: 12 }}>
@@ -25,18 +32,19 @@ function App() {
         </Grid>
 
         {/* Alertas */}
-        <Grid
+        {/* <Grid
           size={{ xs: 12, md: 12 }}
           container
           justifyContent="right"
           alignItems="center"
         >
           <AlertUI description="No se preveen lluvias" />
-        </Grid>
+        </Grid> */}
 
         {/* Selector */}
         <Grid size={{ xs: 12, md: 3 }}>
-          <SelectorUI onCityChange={setCity} />
+          {/* <SelectorUI onCityChange={setCity} /> */}
+          <ZoneSelectorUI onLocationChange={setCoords} />
         </Grid>
 
         {/* Indicadores */}

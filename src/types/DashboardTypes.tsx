@@ -6,6 +6,8 @@ export interface OpenMeteoResponse {
   timezone: string;
   timezone_abbreviation: string;
   elevation: number;
+  current_units: CurrentUnits;
+  current: Current;
   hourly_units: Hourlyunits;
   hourly: Hourly;
   daily_units: Dailyunits;
@@ -16,12 +18,14 @@ export interface Daily {
   time: string[];
   precipitation_sum: number[];
   weather_code: number[];
+  sunshine_duration: number[];
 }
 
 export interface Dailyunits {
   time: string;
   precipitation_sum: string;
   weather_code: string;
+  sunshine_duration: string;
 }
 
 export interface Hourly {
@@ -30,9 +34,6 @@ export interface Hourly {
   relative_humidity_2m: number[];
   uv_index: number[];
   wind_speed_10m: number[];
-  temperature_80m: number[];
-  sunshine_duration: number[];
-  precipitation: number[];
   cloud_cover: number[];
   soil_temperature_6cm: number[];
 }
@@ -48,4 +49,23 @@ export interface Hourlyunits {
   precipitation: string;
   cloud_cover: string;
   soil_temperature_6cm: string;
+}
+
+export interface Current {
+  time: string;
+  interval: number;
+  temperature_2m: number;
+  relative_humidity_2m: number;
+  apparent_temperature: number;
+  wind_speed_10m: number;
+}
+
+// Nueva interfaz para las unidades de los datos actuales
+export interface CurrentUnits {
+  time: string;
+  interval: string;
+  temperature_2m: string;
+  relative_humidity_2m: string;
+  apparent_temperature: string;
+  wind_speed_10m: string;
 }

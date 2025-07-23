@@ -1,18 +1,17 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
-import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import PersonIcon from "@mui/icons-material/Person";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { Person } from "@mui/icons-material";
 
-interface HeaderConfig {
-  timestamp: number;
+interface HeaderUIProps {
+  data: string;
 }
 
-export default function HeaderUI() {
+export default function HeaderUI({ data }: HeaderUIProps) {
+  const fullDate = data?.split("T");
   const user = "Nicolas Fiallo";
-  const time = Date.now();
-  const date = "21 Junio de 2025";
+  const time = fullDate[1];
+  const date = fullDate[0];
 
   return (
     <Box
@@ -56,20 +55,24 @@ export default function HeaderUI() {
           borderRadius={1.5}
           sx={{ bgcolor: "#4E342E", p: "6px 12px" }}
         >
-          <PersonIcon fontSize="small" />
+          <PersonIcon fontSize="medium" />
           <Typography variant="body2">Usuario: {user}</Typography>
         </Stack>
 
         <Stack direction="row" alignItems={"center"} spacing={1}>
-          <AccessTimeIcon fontSize="small" />
+          <AccessTimeIcon fontSize="large" />
           <Box>
+            <Typography
+              variant="body2"
+              sx={{ lineHeight: 1.2, fontWeight: "bold", padding: 1 }}
+            >
+              Ultimo Caché
+            </Typography>
+
             <Typography variant="body2" sx={{ lineHeight: 1.2 }}>
               {time}
             </Typography>
-            <Typography
-              variant="caption"
-              sx={{ opacity: 0.8, lineHeight: 1.2 }}
-            >
+            <Typography variant="body2" sx={{ opacity: 0.8, lineHeight: 2 }}>
               {date}
             </Typography>
           </Box>

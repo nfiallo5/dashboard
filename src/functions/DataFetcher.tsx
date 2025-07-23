@@ -1,50 +1,102 @@
-import { useEffect, useState } from 'react';
-import type { OpenMeteoResponse } from '../types/DashboardTypes';
+import { useEffect, useState } from "react";
+import type { OpenMeteoResponse } from "../types/DashboardTypes";
 
-interface DataFetcherOutput {
-    data: OpenMeteoResponse | null;
-    loading: boolean;
-    error: string | null;
+interface CacheEntry {
+  timestamp: number;
+  data: OpenMeteoResponse;
 }
 
-const cityCoords: Record<string, { latitude: number; longitude: number }> = {
-    guayaquil:  { latitude: -2.17, longitude: -79.92 },
-    quito:      { latitude: -0.22, longitude: -78.52 },
-    manta:      { latitude: -0.95, longitude: -80.67 },
-    cuenca:     { latitude: -2.90, longitude: -78.99 },
-};
+interface DataFetcherOutput {
+  data: OpenMeteoResponse | null;
+  loading: boolean;
+  error: string | null;
+}
 
-export default function DataFetcher(city: string) : DataFetcherOutput {
-    const [data, setData] = useState<OpenMeteoResponse | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+interface Coords {
+  name: string;
+  lat: number;
+  lng: number;
+}
 
-    useEffect(() => {
-        setLoading(true);
-        setError(null);
+const control_minutos = 30;
+const control_ms = control_minutos * 60 * 1000;
 
-        const coords = cityCoords[city] || cityCoords.guayaquil;
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&hourly=temperature_2m,wind_speed_10m&current=apparent_temperature,wind_speed_10m,relative_humidity_2m,temperature_2m&timezone=America%2FChicago`;
+export default function DataFetcher(coords: Coords | null): DataFetcherOutput {
+  const [data, setData] = useState<OpenMeteoResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-        const fetchData = async () => {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
-                }
-                const result: OpenMeteoResponse = await response.json();
-                setData(result);
-            } catch (err: any) {
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError("Ocurrió un error desconocido al obtener los datos.");
-                }
-            } finally {
-                setLoading(false);
-            }
+  useEffect(() => {
+    if (!coords) {
+      setLoading(false);
+      setData(null);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    localStorage.setItem("key", "value");
+
+    const fetchData = async () => {
+      const localKey = `cache-${coords.name}`;
+      try {
+        const item = localStorage.getItem(localKey);
+        if (item) {
+          const cacheEntry: CacheEntry = JSON.parse(item);
+          const tiempo = Date.now() - cacheEntry.timestamp;
+
+          if (tiempo < control_ms) {
+            setData(cacheEntry.data);
+            setLoading(false);
+            return;
+          }
+        }
+
+        // const geocodeResponse = await fetch(`./services/api?city=${location.name}`);
+        // if (!geocodeResponse.ok) {
+        //   throw new Error(
+        //     `Error al obtener reespuesta del servidor: ${geocodeResponse.status} - ${geocodeResponse.statusText}`
+        //   );
+        // }
+
+        // const { lat, lng } = await geocodeResponse.json();
+
+        const hourlyParams =
+          "temperature_2m,relative_humidity_2m,uv_index,wind_speed_10m,cloud_cover,soil_temperature_6cm";
+        const dailyParam = "precipitation_sum,sunshine_duration";
+        const currentParams =
+          "temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m";
+
+        const openmeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&hourly=${hourlyParams}&daily=${dailyParam}&current=${currentParams}&timezone=America%2FChicago&past_days=1`;
+        const weatherResponse = await fetch(openmeteoUrl);
+
+        if (!weatherResponse.ok) {
+          throw new Error(
+            `Error con el servidor: ${weatherResponse.status} - ${weatherResponse.statusText}`
+          );
+        }
+
+        const weatherResult = await weatherResponse.json();
+        setData(weatherResult);
+
+        const newEntry: CacheEntry = {
+          timestamp: Date.now(),
+          data: weatherResult,
         };
-        fetchData();
-    }, [city]);
-    return { data, loading, error };
+        localStorage.setItem(localKey, JSON.stringify(newEntry));
+      } catch (err: any) {
+        const errItem = localStorage.getItem(localKey);
+        if (errItem) {
+          const errData: CacheEntry = JSON.parse(errItem);
+          setData(errData.data);
+          setError(`Mostrando datos de ${coords.name}. Error ${err.message}`);
+        } else {
+          setError("Ocurrió un error desconocido al obtener los datos.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [coords]);
+  return { data, loading, error };
 }

@@ -6,6 +6,7 @@ import ChartUI from "./components/ChartUI";
 import ZoneSelectorUI from "./components/ZoneSelectorUI";
 import QualityIndexUI from "./components/QualityIndexUI";
 import { useState } from "react";
+import IndicatorsTableUI from "./components/TableUI";
 
 interface Coords {
   name: string;
@@ -77,19 +78,19 @@ function App() {
         </Grid>
 
         {/* Tabla */}
-        {/* <Grid
+        <Grid
           size={{ xs: 12, md: 6 }}
           sx={{ display: { xs: "none", md: "block" } }}
         >
           {dataFetcherOutput.loading && <p>Cargando datos...</p>}
           {dataFetcherOutput.error && <p>Error: {dataFetcherOutput.error}</p>}
           {dataFetcherOutput.data && (
-            <TableUI
-              hourly={dataFetcherOutput.data.hourly}
-              hourly_units={dataFetcherOutput.data.hourly_units}
+            <IndicatorsTableUI
+              data={dataFetcherOutput.data}
+              loading={dataFetcherOutput.loading}
             />
           )}
-        </Grid> */}
+        </Grid>
 
         {/* Información adicional */}
       </Grid>

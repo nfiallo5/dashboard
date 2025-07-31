@@ -51,15 +51,6 @@ export default function DataFetcher(coords: Coords | null): DataFetcherOutput {
           }
         }
 
-        // const geocodeResponse = await fetch(`./services/api?city=${location.name}`);
-        // if (!geocodeResponse.ok) {
-        //   throw new Error(
-        //     `Error al obtener reespuesta del servidor: ${geocodeResponse.status} - ${geocodeResponse.statusText}`
-        //   );
-        // }
-
-        // const { lat, lng } = await geocodeResponse.json();
-
         const hourlyParams =
           "temperature_2m,relative_humidity_2m,uv_index,wind_speed_10m,cloud_cover,soil_temperature_6cm";
         const dailyParam = "precipitation_sum,sunshine_duration";

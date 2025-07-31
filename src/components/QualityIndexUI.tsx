@@ -36,7 +36,7 @@ const metricsConfig = [
     optimal: [5, 6.7],
     weight: 0.15,
     unit: "mm/día",
-  }, // Equivalente a 150-200mm/mes
+  },
   {
     id: "windSpeed",
     label: "Velocidad Viento",

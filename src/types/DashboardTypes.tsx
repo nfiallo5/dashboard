@@ -60,7 +60,6 @@ export interface Current {
   wind_speed_10m: number;
 }
 
-// Nueva interfaz para las unidades de los datos actuales
 export interface CurrentUnits {
   time: string;
   interval: string;

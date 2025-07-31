@@ -8,7 +8,7 @@ export async function GET(request: Request) {
       headers: { "Content-Type": "application/json" },
     });
   }
-  // Use import.meta.env for Vite or similar tools
+
   const API_KEY = import.meta.env.VITE_GOOGLE_API_TOKEN;
 
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${API_KEY}`;

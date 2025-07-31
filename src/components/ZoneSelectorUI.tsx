@@ -11,7 +11,6 @@ import type { SelectChangeEvent } from "@mui/material/Select";
 import PlaceIcon from "@mui/icons-material/Place";
 
 const cities = [
-  // COSTA
   {
     value: "jipijapa,manabi",
     label: "Manabí - Jipijapa",
@@ -32,7 +31,6 @@ const cities = [
     label: "El Oro - Arenillas",
     variety: "CCN-51 mejorado",
   },
-  // ORIENTE
   {
     value: "shushufindi,sucumbios",
     label: "Sucumbíos - Shushufindi",

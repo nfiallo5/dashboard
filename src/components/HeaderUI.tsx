@@ -9,7 +9,7 @@ interface HeaderUIProps {
 
 export default function HeaderUI({ data }: HeaderUIProps) {
   const fullDate = data?.split("T");
-  const user = "Nicolas Fiallo";
+  const user = "Usuario Anónimo";
   const time = fullDate[1];
   const date = fullDate[0];
 
